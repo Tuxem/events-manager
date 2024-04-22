@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Contracts{% endblock %}
+{% block body %}
+    <h2>Contracts</h2>
+    <a href="{{ url_for('api.create_contract') }}" class="btn btn-primary mb-3">Add Contract</a>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Event Date</th>
+                <th>Price</th>
+                <th>Band</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for contract in contracts %}
+            <tr>
+                <td>{{ contract.event_date }}</td>
+                <td>{{ contract.price | format_currency }}</td>
+                <td>{{ contract.band.name }}</td>
+                <td>
+                    <a href="{{ url_for('api.update_contract', id=contract.id) }}" class="btn btn-secondary">Edit</a>
+                    <a href="{{ url_for('api.delete_contract', id=contract.id) }}" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

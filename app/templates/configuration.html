@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Configuration{% endblock %}
+{% block body %}
+    <h2>Configuration Settings</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Key</th>
+                <th>Value</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for config in configurations %}
+            <tr>
+                <td>{{ config.key }}</td>
+                <td>{{ config.value }}</td>
+                <td>
+                    <a href="{{ url_for('api.update_configuration', id=config.id) }}" class="btn btn-secondary">Edit</a>
+                    <a href="{{ url_for('api.delete_configuration', id=config.id) }}" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

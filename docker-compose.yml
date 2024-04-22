@@ -1,0 +1,26 @@
+version: '3.8'
+services:
+  db:
+    image: postgres
+    environment:
+      POSTGRES_DB: mydatabase
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+  web:
+    build: .
+    command: flask run --host=0.0.0.0
+    volumes:
+      - .:/code
+    ports:
+      - "5000:5000"
+    environment:
+      SECRET_KEY: "your-secret-key"
+      DATABASE_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:${POSTGRES_PORT:-5432}/${POSTGRES_DB}"
+    depends_on:
+      - db
+
+volumes:
+  db-data:
