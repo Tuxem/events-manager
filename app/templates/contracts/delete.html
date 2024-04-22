@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Delete Contract</h1>
+<p>Are you sure you want to delete "{{ contract.title }}"?</p>
+<form method="post">
+  <input type="submit" value="Delete">
+  <a href="{{ url_for('web.list_contracts') }}">Cancel</a>
+</form>
+{% endblock %}

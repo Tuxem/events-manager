@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>{% if contract.id %}Edit{% else %}Create{% endif %} Contract</h1>
+<form method="post">
+  <label for="title">Title:</label>
+  <input type="text" id="title" name="title" value="{{ contract.title if contract.id }}">
+  <!-- Add other fields as necessary -->
+  <input type="submit" value="Submit">
+</form>
+{% endblock %}

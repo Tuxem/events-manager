@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>{{ contract.title }}</h1>
+<p>Details about the contract...</p>
+<a href="{{ url_for('web.edit_contract', id=contract.id) }}">Edit</a>
+<a href="{{ url_for('web.delete_contract', id=contract.id) }}">Delete</a>
+{% endblock %}

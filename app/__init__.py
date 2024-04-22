@@ -5,6 +5,8 @@ from flask_migrate import Migrate
 from app.database import db, migrate
 from app.config import Config
 from app.routes.api import api as api_blueprint
+from app.routes.web import web
+
 
 def create_app():
     app = Flask(__name__)
@@ -18,5 +20,8 @@ def create_app():
 
     # Register blueprints
     app.register_blueprint(api_blueprint, url_prefix='/api')
+
+    app.register_blueprint(web)
+
 
     return app

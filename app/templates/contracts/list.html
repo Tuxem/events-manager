@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Contracts</h1>
+<a href="{{ url_for('web.create_contract') }}">Create New Contract</a>
+<ul>
+  {% for contract in contracts %}
+  <li>
+    <a href="{{ url_for('web.detail_contract', id=contract.id) }}">{{ contract.title }}</a>
+    - <a href="{{ url_for('web.edit_contract', id=contract.id) }}">Edit</a>
+    - <a href="{{ url_for('web.delete_contract', id=contract.id) }}">Delete</a>
+  </li>
+  {% endfor %}
+</ul>
+{% endblock %}
