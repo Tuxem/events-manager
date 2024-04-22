@@ -1,11 +1,12 @@
 version: '3.8'
+
 services:
   db:
     image: postgres
     environment:
-      POSTGRES_DB: mydatabase
-      POSTGRES_USER: myuser
-      POSTGRES_PASSWORD: mypassword
+      POSTGRES_PASSWORD: ${DB_PASSWORD}  # Reference from .env
+      POSTGRES_USER: ${DB_USER}        # Reference from .env
+      POSTGRES_DB: ${DB_NAME}          # Reference from .env
     volumes:
       - db-data:/var/lib/postgresql/data
 
@@ -17,10 +18,8 @@ services:
     ports:
       - "5000:5000"
     environment:
-      SECRET_KEY: "your-secret-key"
-      DATABASE_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:${POSTGRES_PORT:-5432}/${POSTGRES_DB}"
+      DATABASE_URL: "postgresql://${DB_USER}:${DB_PASSWORD}@db:${POSTGRES_PORT:-5432}/${DB_NAME}"
     depends_on:
       - db
-
 volumes:
   db-data:
