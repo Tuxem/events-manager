@@ -52,38 +52,34 @@ def create_or_edit_event(id=None):
     bands = Band.query.all()
 
     if request.method == 'POST':
-        event.title = request.form['title']
-        event_date = request.form['date']
-        event.place_id = request.form['place_id']
+        event.title = request.form.get('title', '')
+        event_date = request.form.get('date', '')
+        event.place_id = request.form.get('place_id', '')
 
-        if event_date:
+        if not event_date:
+            flash('Date is required.', 'error')
+            return render_template('events/form.html', event=event, places=places, bands=bands)
+
+        try:
             event.date = datetime.strptime(event_date, '%Y-%m-%d')
+        except ValueError:
+            flash('Invalid date format.', 'error')
+            return render_template('events/form.html', event=event, places=places, bands=bands)
 
-        # Read band IDs and their orders
         band_ids = request.form.getlist('band_ids[]')
-        band_orders = request.form.getlist('band_order[]')
+        if not band_ids:
+            flash('At least one band must be selected.', 'error')
+            return render_template('events/form.html', event=event, places=places, bands=bands)
 
-        # Clear existing bands and add them in the new order
-        event.bands.clear()
-        for band_id, order in zip(band_ids, band_orders):
-            band = Band.query.get(band_id)
-            # Append band with the specified order
-            event.bands.append(band)
-            # Update the order in the association table
-            db.session.execute(
-                event_bands.update().\
-                values(order=order).\
-                where(event_bands.c.band_id == band_id).\
-                where(event_bands.c.event_id == event.id)
-            )
+        # Update the bands associated with the event
+        event.bands = [Band.query.get(band_id) for band_id in band_ids if Band.query.get(band_id)]
 
-        db.session.add(event)
+        db.session.add(event)  # Add the event if it's new
         db.session.commit()
         flash('Event saved successfully!', 'success')
         return redirect(url_for('web.list_events'))
 
-    event_band_ids = [band.id for band in event.bands]
-    return render_template('events/form.html', event=event, places=places, bands=bands, event_band_ids=event_band_ids)
+    return render_template('events/form.html', event=event, places=places, bands=bands)
 
 @web.route('/events/<int:id>/delete', methods=['POST'])
 def delete_event(id):
