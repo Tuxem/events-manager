@@ -1,14 +1,14 @@
 {% extends "base.html" %}
 {% block body %}
 <h1>Places</h1>
-<a href="{{ url_for('web.create_or_edit_band') }}" class="btn btn-primary">Add New Band</a>
+<a href="{{ url_for('web.create_or_edit_place') }}" class="btn btn-primary">Add New place</a>
 <ul>
-  {% for band in places %}
+  {% for place in places %}
   <li>
-    {{ band.name }}
-    <a href="{{ url_for('web.detail_band', id=band.id) }}">View</a> |
-    <a href="{{ url_for('web.edit_band', id=band.id) }}">Edit</a> |
-    <form action="{{ url_for('web.delete_band', id=band.id) }}" method="post" style="display: inline;">
+    <!-- Make place name clickable to edit the place -->
+    <a href="{{ url_for('web.create_or_edit_place', id=place.id) }}">{{ place.name }}</a>
+    <!-- Confirmation dialog for Delete -->
+    <form action="{{ url_for('web.delete_place', id=place.id) }}" method="post" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this place?');">
       <input type="submit" value="Delete" class="btn btn-danger">
     </form>
   </li>

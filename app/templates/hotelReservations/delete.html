@@ -1,9 +1,0 @@
-{% extends "base.html" %}
-{% block content %}
-<h1>Delete Band</h1>
-<p>Are you sure you want to delete {{ band.name }}?</p>
-<form method="post">
-  <button type="submit">Delete</button>
-  <a href="{{ url_for('web.list_hotelreservations') }}">Cancel</a>
-</form>
-{% endblock %}

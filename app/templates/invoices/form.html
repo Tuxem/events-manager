@@ -1,11 +1,22 @@
 {% extends "base.html" %}
 {% block body %}
-<h1>{{ 'Edit' if band.id else 'Create' }} Band</h1>
+<h1>{{ 'Edit' if invoice.id else 'Create' }} Invoice</h1>
 <form method="post">
-  <label for="name">Name:</label>
-  <input type="text" id="name" name="name" value="{{ band.name if band.id else '' }}" required>
-  <label for="musicians_count">Number of Musicians:</label>
-  <input type="number" id="musicians_count" name="musicians_count" value="{{ band.musicians_count if band.id else '' }}">
-  <button type="submit">{{ 'Update' if band.id else 'Create' }}</button>
+  <div class="mb-3">
+    <label for="amount" class="form-label">Amount:</label>
+    <input type="number" class="form-control" id="amount" name="amount" step="0.01" value="{{ invoice.amount if invoice.id }}">
+  </div>
+  <div class="mb-3">
+    <label for="due_date" class="form-label">Due Date:</label>
+    <input type="date" class="form-control" id="due_date" name="due_date" value="{{ invoice.due_date | date('Y-m-d') if invoice.due_date }}">
+  </div>
+  <div class="mb-3">
+    <label for="paid" class="form-label">Paid:</label>
+    <select class="form-control" id="paid" name="paid">
+      <option value="true" {% if invoice.paid %} selected {% endif %}>Yes</option>
+      <option value="false" {% if not invoice.paid %} selected {% endif %}>No</option>
+    </select>
+  </div>
+  <button type="submit" class="btn btn-primary">{{ 'Update' if invoice.id else 'Create' }}</button>
 </form>
 {% endblock %}

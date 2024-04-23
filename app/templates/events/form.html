@@ -1,11 +1,40 @@
 {% extends "base.html" %}
 {% block body %}
-<h1>{{ 'Edit' if band.id else 'Create' }} Band</h1>
+<h1>{{ 'Edit' if event.id else 'Create' }} Event</h1>
 <form method="post">
-  <label for="name">Name:</label>
-  <input type="text" id="name" name="name" value="{{ band.name if band.id else '' }}" required>
-  <label for="musicians_count">Number of Musicians:</label>
-  <input type="number" id="musicians_count" name="musicians_count" value="{{ band.musicians_count if band.id else '' }}">
-  <button type="submit">{{ 'Update' if band.id else 'Create' }}</button>
+  <div class="mb-3">
+    <label for="date" class="form-label">Date:</label>
+    <input type="date" class="form-control" id="date" name="date" value="{{ event.date if event.id }}" required>
+  </div>
+  <div class="mb-3">
+    <label for="place_id" class="form-label">Place:</label>
+    <select class="form-control" id="place_id" name="place_id">
+      {% for place in places %}
+      <option value="{{ place.id }}" {% if event.place_id == place.id %} selected {% endif %}>{{ place.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="mb-3">
+    <label for="band_ids" class="form-label">Bands:</label>
+    <select class="form-control" id="band_ids" name="band_ids[]" multiple="multiple">
+      {% for band in bands %}
+      <option value="{{ band.id }}" {% if band.id in event_band_ids %} selected {% endif %}>{{ band.name }}</option>
+      {% endfor %}
+    </select>
+      </div>
+  
+  <button type="submit" class="btn btn-primary">{{ 'Update' if event.id else 'Create' }}</button>
 </form>
+
+<link href="https://cdn.jsdelivr.net/npm/select2/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2/dist/js/select2.min.js"></script>
+<script>
+$(document).ready(function() {
+    $('#band_ids').select2({
+        placeholder: "Select bands",
+        allowClear: true
+    });
+});
+</script>
 {% endblock %}

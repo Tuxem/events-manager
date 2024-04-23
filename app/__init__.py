@@ -7,7 +7,6 @@ from app.config import Config
 from app.routes.api import api as api_blueprint
 from app.routes.web import web
 
-
 def create_app():
     app = Flask(__name__)
     # Load configuration settings from Config class

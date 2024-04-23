@@ -5,10 +5,10 @@
 <ul>
   {% for band in bands %}
   <li>
-    {{ band.name }}
-    <a href="{{ url_for('web.detail_band', id=band.id) }}">View</a> |
-    <a href="{{ url_for('web.create_or_edit_band', id=band.id) }}">Edit</a> |
-    <form action="{{ url_for('web.delete_band', id=band.id) }}" method="post" style="display: inline;">
+    <!-- Make band name clickable to edit the band -->
+    <a href="{{ url_for('web.create_or_edit_band', id=band.id) }}">{{ band.name }}</a>
+    <!-- Confirmation dialog for Delete -->
+    <form action="{{ url_for('web.delete_band', id=band.id) }}" method="post" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this band?');">
       <input type="submit" value="Delete" class="btn btn-danger">
     </form>
   </li>

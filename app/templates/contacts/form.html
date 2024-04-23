@@ -1,11 +1,19 @@
 {% extends "base.html" %}
 {% block body %}
-<h1>{{ 'Edit' if band.id else 'Create' }} Band</h1>
+<h1>{{ 'Edit' if contact.id else 'Create' }} Contact</h1>
 <form method="post">
-  <label for="name">Name:</label>
-  <input type="text" id="name" name="name" value="{{ band.name if band.id else '' }}" required>
-  <label for="musicians_count">Number of Musicians:</label>
-  <input type="number" id="musicians_count" name="musicians_count" value="{{ band.musicians_count if band.id else '' }}">
-  <button type="submit">{{ 'Update' if band.id else 'Create' }}</button>
+  <div class="mb-3">
+    <label for="name" class="form-label">Name:</label>
+    <input type="text" class="form-control" id="name" name="name" value="{{ contact.name if contact.id }}" required>
+  </div>
+  <div class="mb-3">
+    <label for="email" class="form-label">Email:</label>
+    <input type="email" class="form-control" id="email" name="email" value="{{ contact.email if contact.id }}">
+  </div>
+  <div class="mb-3">
+    <label for="phone" class="form-label">Phone:</label>
+    <input type="text" class="form-control" id="phone" name="phone" value="{{ contact.phone if contact.id }}">
+  </div>
+  <button type="submit" class="btn btn-primary">{{ 'Update' if contact.id else 'Create' }}</button>
 </form>
 {% endblock %}

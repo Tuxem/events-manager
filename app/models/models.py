@@ -29,6 +29,7 @@ class Event(db.Model):
     __tablename__ = 'event'
     id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.DateTime, nullable=False)
+    name = db.Column(db.String, nullable=True)
     place_id = db.Column(db.Integer, db.ForeignKey('place.id'))
     place = db.relationship('Place', back_populates='events')
     hotel_reservations = db.relationship('HotelReservation', back_populates='event')

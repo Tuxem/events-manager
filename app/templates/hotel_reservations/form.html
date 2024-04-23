@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block body %}
+<h1>{{ 'Edit' if reservation.id else 'Create' }} Hotel Reservation</h1>
+<form method="post">
+  <div class="mb-3">
+    <label for="event_date" class="form-label">Event Date:</label>
+    <input type="date" class="form-control" id="event_date" name="event_date" value="{{ reservation.event_date if reservation.id }}">
+  </div>
+  <div class="mb-3">
+    <label for="hotel_id" class="form-label">Hotel:</label>
+    <select class="form-control" id="hotel_id" name="hotel_id">
+      {% for hotel in hotels %}
+      <option value="{{ hotel.id }}" {% if reservation.hotel_id == hotel.id %} selected {% endif %}>{{ hotel.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <button type="submit" class="btn btn-primary">{{ 'Update' if reservation.id else 'Create' }}</button>
+</form>
+{% endblock %}
