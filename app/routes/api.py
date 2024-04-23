@@ -40,7 +40,11 @@ def delete_event(id):
 # Band Routes
 @api.route('/bands', methods=['GET'])
 def get_bands():
-    bands = Band.query.all()
+    query = request.args.get('query')
+    if query:
+        bands = Band.query.filter(Band.name.ilike(f'%{query}%')).all()
+    else:
+        bands = Band.query.all()
     return jsonify([band.to_dict() for band in bands]), 200
 
 @api.route('/bands', methods=['POST'])

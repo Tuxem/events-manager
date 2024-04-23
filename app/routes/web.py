@@ -52,29 +52,37 @@ def create_or_edit_event(id=None):
     bands = Band.query.all()
 
     if request.method == 'POST':
-        event.title = request.form.get('title', '')
-        event_date = request.form.get('date', '')
-        event.place_id = request.form.get('place_id', '')
-
-        print(f"Received data: title={event.title}, date={event_date}, place_id={event.place_id}")
+        event.title = request.form['title']
+        event_date = request.form['date']
+        event.place_id = request.form['place_id']
 
         if event_date:
-            try:
-                event.date = datetime.strptime(event_date, '%Y-%m-%d')
-            except ValueError:
-                flash('Invalid date format.', 'error')
-                return render_template('events/form.html', event=event, places=places, bands=bands)
+            event.date = datetime.strptime(event_date, '%Y-%m-%d')
 
-        selected_bands = request.form.getlist('band_ids[]')
-        print(f"Selected bands: {selected_bands}")
-        event.bands = [Band.query.get(int(band_id)) for band_id in selected_bands if band_id]
+        # Read band IDs and their orders
+        band_ids = request.form.getlist('band_ids[]')
+        band_orders = request.form.getlist('band_order[]')
 
-        db.session.add(event) if not event.id else None
+        # Clear existing bands and add them in the new order
+        event.bands.clear()
+        for band_id, order in zip(band_ids, band_orders):
+            band = Band.query.get(band_id)
+            # Append band with the specified order
+            event.bands.append(band)
+            # Update the order in the association table
+            db.session.execute(
+                event_bands.update().\
+                values(order=order).\
+                where(event_bands.c.band_id == band_id).\
+                where(event_bands.c.event_id == event.id)
+            )
+
+        db.session.add(event)
         db.session.commit()
         flash('Event saved successfully!', 'success')
         return redirect(url_for('web.list_events'))
 
-    event_band_ids = [band.id for band in event.bands] if event.bands else []
+    event_band_ids = [band.id for band in event.bands]
     return render_template('events/form.html', event=event, places=places, bands=bands, event_band_ids=event_band_ids)
 
 @web.route('/events/<int:id>/delete', methods=['POST'])

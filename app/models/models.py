@@ -5,7 +5,8 @@ from app import db
 # Many-to-many association tables
 event_bands = db.Table('event_bands',
     db.Column('event_id', db.Integer, db.ForeignKey('event.id'), primary_key=True),
-    db.Column('band_id', db.Integer, db.ForeignKey('band.id'), primary_key=True)
+    db.Column('band_id', db.Integer, db.ForeignKey('band.id'), primary_key=True),
+    db.Column('order', db.Integer)  # This column will store the order of bands
 )
 
 class Hotel(db.Model):
@@ -31,11 +32,11 @@ class Event(db.Model):
     date = db.Column(db.DateTime, nullable=False)
     name = db.Column(db.String, nullable=True)
     place_id = db.Column(db.Integer, db.ForeignKey('place.id'))
-    place = db.relationship('Place', back_populates='events')
     hotel_reservations = db.relationship('HotelReservation', back_populates='event')
-    bands = db.relationship('Band', secondary=event_bands, back_populates='events')
+    place = db.relationship('Place', back_populates='events')
+    bands = db.relationship('Band', secondary=event_bands, back_populates='events', order_by=event_bands.c.order)
     contracts = db.relationship('Contract', back_populates='associated_event')
-
+    
 class Band(db.Model):
     __tablename__ = 'band'
     id = db.Column(db.Integer, primary_key=True)
@@ -47,6 +48,16 @@ class Band(db.Model):
     events = db.relationship('Event', secondary=event_bands, back_populates='bands')
     contracts = db.relationship('Contract', back_populates='band')
 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'musicians_count': self.musicians_count,
+            'techs_count': self.techs_count,
+            'accomp_count': self.accomp_count,
+            'tech_rider_url': self.tech_rider_url
+        }
+    
 class Contact(db.Model):
     __tablename__ = 'contact'
     id = db.Column(db.Integer, primary_key=True)
