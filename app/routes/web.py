@@ -1,5 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for
-from .models import db, Event, Hotel, HotelReservation, Band, Contact, Function, Place, Invoice
+
+from app.models import Event, Hotel, HotelReservation, Band, Contact, Function, Place, Invoice
+from app.database import db
 
 web = Blueprint('web', __name__)
 

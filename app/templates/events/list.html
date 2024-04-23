@@ -1,15 +1,16 @@
 {% extends "base.html" %}
-{% block content %}
+{% block body %}
 <h1>Events</h1>
-<a href="{{ url_for('web.create_event') }}">Create New Event</a>
+<a href="{{ url_for('web.create_band') }}" class="btn btn-primary">Add New Band</a>
 <ul>
-  {% for event in events %}
+  {% for band in events %}
   <li>
-    <a href="{{ url_for('web.detail_event', id=event.id) }}">{{ event.name }}</a>
-    - <a href="{{ url_for('web.edit_event', id=event.id) }}">Edit</a>
-    - <form action="{{ url_for('web.delete_event', id=event.id) }}" method="post">
-        <button type="submit">Delete</button>
-      </form>
+    {{ band.name }}
+    <a href="{{ url_for('web.detail_band', id=band.id) }}">View</a> |
+    <a href="{{ url_for('web.edit_band', id=band.id) }}">Edit</a> |
+    <form action="{{ url_for('web.delete_band', id=band.id) }}" method="post" style="display: inline;">
+      <input type="submit" value="Delete" class="btn btn-danger">
+    </form>
   </li>
   {% endfor %}
 </ul>

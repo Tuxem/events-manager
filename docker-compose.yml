@@ -21,12 +21,12 @@ services:
       DATABASE_URL: "postgresql://${DB_USER}:${DB_PASSWORD}@db:${POSTGRES_PORT:-5432}/${DB_NAME}"
     depends_on:
       - db
-  migrator:
-    build: .
-    command: flask db upgrade
-    depends_on:
-      - db
-    environment:
-      FLASK_APP: app.py      
+  # migrator:
+  #   build: .
+  #   command: flask db upgrade
+  #   depends_on:
+  #     - db
+  #   environment:
+  #     FLASK_APP: app.py      
 volumes:
   db-data:

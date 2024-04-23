@@ -1,0 +1,39 @@
+#!/bin/bash
+
+# Base directory for templates
+base_dir="app/templates"
+
+# Source entity
+source_entity="bands"
+
+# List of new entities
+declare -a entities=("events" "hotels" "hotelReservations" "events" "contacts" "contracts" "functions" "places" "invoices" "configuration")
+
+# Loop through each entity in the list
+for entity in "${entities[@]}"; do
+    # Create a directory for the new entity if it doesn't exist
+    mkdir -p "$base_dir/$entity"
+
+    # Copy all files from the source entity directory to the new entity directory
+    cp "$base_dir/$source_entity"/* "$base_dir/$entity/"
+
+    # Navigate to the new entity directory
+    cd "$base_dir/$entity"
+
+    # Use sed to replace all occurrences of the source entity with the new entity
+    # This handles both lowercase and capitalized versions
+    lc_source=$(echo "$source_entity" | awk '{print tolower($0)}')  # lowercase source entity
+    lc_entity=$(echo "$entity" | awk '{print tolower($0)}')  # lowercase new entity
+    uc_source=$(echo "$source_entity" | awk '{print toupper(substr($0, 1, 1)) substr($0, 2)}')  # Uppercase first letter source
+    uc_entity=$(echo "$entity" | awk '{print toupper(substr($0, 1, 1)) substr($0, 2)}')  # Uppercase first letter new
+
+    # Replace lowercase and capitalized occurrences
+    sed -i "s/$lc_source/$lc_entity/g" *.html
+    sed -i "s/$uc_source/$uc_entity/g" *.html
+
+    # Return to the base directory
+    cd -
+done
+
+echo "Template duplication and modification complete."
+

@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% block body %}
-<h1>Contracts</h1>
+<h1>Bands</h1>
 <a href="{{ url_for('web.create_band') }}" class="btn btn-primary">Add New Band</a>
 <ul>
-  {% for band in contracts %}
+  {% for band in bands %}
   <li>
     {{ band.name }}
     <a href="{{ url_for('web.detail_band', id=band.id) }}">View</a> |
