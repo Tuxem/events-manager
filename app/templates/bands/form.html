@@ -2,10 +2,26 @@
 {% block body %}
 <h1>{{ 'Edit' if band.id else 'Create' }} Band</h1>
 <form method="post">
-  <label for="name">Name:</label>
-  <input type="text" id="name" name="name" value="{{ band.name if band.id else '' }}" required>
-  <label for="musicians_count">Number of Musicians:</label>
-  <input type="number" id="musicians_count" name="musicians_count" value="{{ band.musicians_count if band.id else '' }}">
-  <button type="submit">{{ 'Update' if band.id else 'Create' }}</button>
+  <div class="mb-3">
+    <label for="name" class="form-label">Name:</label>
+    <input type="text" class="form-control" id="name" name="name" value="{{ band.name if band.id }}" required>
+  </div>
+  <div class="mb-3">
+    <label for="musicians_count" class="form-label">Number of Musicians:</label>
+    <input type="number" class="form-control" id="musicians_count" name="musicians_count" value="{{ band.musicians_count if band.id }}">
+  </div>
+  <div class="mb-3">
+    <label for="techs_count" class="form-label">Number of Technicians:</label>
+    <input type="number" class="form-control" id="techs_count" name="techs_count" value="{{ band.techs_count if band.id }}">
+  </div>
+  <div class="mb-3">
+    <label for="accomp_count" class="form-label">Number of Accompanying Staff:</label>
+    <input type="number" class="form-control" id="accomp_count" name="accomp_count" value="{{ band.accomp_count if band.id }}">
+  </div>
+  <div class="mb-3">
+    <label for="tech_rider_url" class="form-label">Tech Rider URL:</label>
+    <input type="url" class="form-control" id="tech_rider_url" name="tech_rider_url" value="{{ band.tech_rider_url if band.id }}">
+  </div>
+  <button type="submit" class="btn btn-primary">{{ 'Update' if band.id else 'Create' }}</button>
 </form>
 {% endblock %}

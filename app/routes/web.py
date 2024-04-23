@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for
+from flask import Blueprint, render_template, request, redirect, url_for, flash
 
 from app.models import Event, Hotel, HotelReservation, Band, Contact, Function, Place, Invoice
 from app.database import db
@@ -116,18 +116,22 @@ def detail_band(id):
     return render_template('bands/detail.html', band=band)
 
 @web.route('/bands/new', methods=['GET', 'POST'])
-def create_band():
-    if request.method == 'POST':
-        # Add logic to create a band
-        return redirect(url_for('web.list_bands'))
-    return render_template('bands/form.html', band=None)
-
 @web.route('/bands/<int:id>/edit', methods=['GET', 'POST'])
-def edit_band(id):
-    band = Band.query.get_or_404(id)
+def create_or_edit_band(id=None):
+    band = Band.query.get(id) if id else Band()
     if request.method == 'POST':
-        # Add logic to update the band
-        return redirect(url_for('web.detail_band', id=band.id))
+        band.name = request.form['name']
+        band.musicians_count = int(request.form['musicians_count']) if request.form['musicians_count'] else 0
+        band.techs_count = int(request.form['techs_count']) if request.form['techs_count'] else 0
+        band.accomp_count = int(request.form['accomp_count']) if request.form['accomp_count'] else 0
+        band.tech_rider_url = request.form['tech_rider_url']
+
+        if not band.id:
+            db.session.add(band)  # Only add to session if it's a new band
+        
+        db.session.commit()
+        flash('Band saved successfully!', 'success')
+        return redirect(url_for('web.list_bands'))
     return render_template('bands/form.html', band=band)
 
 @web.route('/bands/<int:id>/delete', methods=['POST'])
