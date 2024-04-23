@@ -79,7 +79,11 @@ def create_or_edit_event(id=None):
         flash('Event saved successfully!', 'success')
         return redirect(url_for('web.list_events'))
 
-    return render_template('events/form.html', event=event, places=places, bands=bands)
+    # Prepare data for GET request
+    event_date = event.date.strftime('%m/%d/%Y') if event.date else ''
+    event_band_ids = [band.id for band in event.bands] if event.bands else []
+
+    return render_template('events/form.html', event=event, places=places, bands=bands, event_date=event_date, event_band_ids=event_band_ids)
 
 @web.route('/events/<int:id>/delete', methods=['POST'])
 def delete_event(id):
