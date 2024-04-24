@@ -56,10 +56,6 @@ def create_or_edit_event(id=None):
         event_date = request.form.get('date', '')
         event.place_id = request.form.get('place_id', '')
 
-        if not event_date:
-            flash('Date is required.', 'error')
-            return render_template('events/form.html', event=event, places=places, bands=bands)
-
         try:
             event.date = datetime.strptime(event_date, '%Y-%m-%d')
         except ValueError:
