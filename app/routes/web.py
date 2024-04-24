@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app
 
 from app.models import Band, Event, Hotel, HotelReservation, Place, Contact, Contract, Function, Place, Invoice
 from app.database import db
@@ -80,7 +80,8 @@ def create_or_edit_event(id=None):
         return redirect(url_for('web.list_events'))
 
     # Prepare data for GET request
-    event_date = event.date.strftime('%m/%d/%Y') if event.date else ''
+    event_date = event.date.strftime('%Y-%m-%d') if event.date else ''
+    current_app.logger.info(f"Event date: {event_date}")
     event_band_ids = [band.id for band in event.bands] if event.bands else []
 
     return render_template('events/form.html', event=event, places=places, bands=bands, event_date=event_date, event_band_ids=event_band_ids)

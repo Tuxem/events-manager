@@ -1,3 +1,5 @@
+import logging
+
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -22,5 +24,16 @@ def create_app():
 
     app.register_blueprint(web)
 
+
+    # Configure logging
+    # Set up logging to standard output
+    stream_handler = logging.StreamHandler()
+    stream_handler.setFormatter(logging.Formatter(
+        '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'))
+    stream_handler.setLevel(logging.INFO)  # Set to DEBUG for more verbose output if needed
+    app.logger.addHandler(stream_handler)
+    app.logger.setLevel(logging.INFO)
+    
+    app.logger.info('MyApp startup')
 
     return app
