@@ -26,14 +26,13 @@ def create_app():
 
 
     # Configure logging
-    # Set up logging to standard output
-    stream_handler = logging.StreamHandler()
-    stream_handler.setFormatter(logging.Formatter(
-        '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'))
-    stream_handler.setLevel(logging.INFO)  # Set to DEBUG for more verbose output if needed
-    app.logger.addHandler(stream_handler)
-    app.logger.setLevel(logging.INFO)
-    
+    # Set up logging
+    handler = logging.StreamHandler()
+    handler.setLevel(logging.DEBUG)  # Adjust as needed
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    handler.setFormatter(formatter)
+    app.logger.addHandler(handler)
+    app.logger.setLevel(logging.DEBUG)    
     app.logger.info('MyApp startup')
 
     return app

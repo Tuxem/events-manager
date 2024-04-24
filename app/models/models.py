@@ -2,12 +2,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 from app import db
 
-# Many-to-many association tables
-event_bands = db.Table('event_bands',
-    db.Column('event_id', db.Integer, db.ForeignKey('event.id'), primary_key=True),
-    db.Column('band_id', db.Integer, db.ForeignKey('band.id'), primary_key=True),
-    db.Column('order', db.Integer)  # This column will store the order of bands
-)
+# New models should be added to the import statement in app/models/__init__.py
 
 class Hotel(db.Model):
     __tablename__ = 'hotel'
@@ -26,17 +21,16 @@ class HotelReservation(db.Model):
     hotel = db.relationship('Hotel', back_populates='reservations')
     event = db.relationship('Event', back_populates='hotel_reservations')
 
-class Event(db.Model):
-    __tablename__ = 'event'
-    id = db.Column(db.Integer, primary_key=True)
-    date = db.Column(db.DateTime, nullable=False)
-    name = db.Column(db.String, nullable=True)
-    place_id = db.Column(db.Integer, db.ForeignKey('place.id'))
-    hotel_reservations = db.relationship('HotelReservation', back_populates='event')
-    place = db.relationship('Place', back_populates='events')
-    bands = db.relationship('Band', secondary=event_bands, back_populates='events', order_by=event_bands.c.order)
-    contracts = db.relationship('Contract', back_populates='associated_event')
+class EventBand(db.Model):
+    __tablename__ = 'event_bands'
+    event_id = db.Column(db.Integer, db.ForeignKey('event.id'), primary_key=True)
+    band_id = db.Column(db.Integer, db.ForeignKey('band.id'), primary_key=True)
+    order = db.Column(db.Integer)  # This column will store the order of bands
     
+    # Relationship to Event and Band
+    event = db.relationship("Event", back_populates="bands")
+    band = db.relationship("Band", back_populates="events")
+
 class Band(db.Model):
     __tablename__ = 'band'
     id = db.Column(db.Integer, primary_key=True)
@@ -45,19 +39,20 @@ class Band(db.Model):
     techs_count = db.Column(db.Integer)
     accomp_count = db.Column(db.Integer)
     tech_rider_url = db.Column(db.String)
-    events = db.relationship('Event', secondary=event_bands, back_populates='bands')
+    events = db.relationship('EventBand', back_populates='band', order_by=EventBand.order)
     contracts = db.relationship('Contract', back_populates='band')
 
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'name': self.name,
-            'musicians_count': self.musicians_count,
-            'techs_count': self.techs_count,
-            'accomp_count': self.accomp_count,
-            'tech_rider_url': self.tech_rider_url
-        }
-    
+class Event(db.Model):
+    __tablename__ = 'event'
+    id = db.Column(db.Integer, primary_key=True)
+    date = db.Column(db.DateTime, nullable=False)
+    name = db.Column(db.String, nullable=True)
+    place_id = db.Column(db.Integer, db.ForeignKey('place.id'))
+    hotel_reservations = db.relationship('HotelReservation', back_populates='event')
+    place = db.relationship('Place', back_populates='events')
+    bands = db.relationship('EventBand', back_populates='event', order_by=EventBand.order)
+    contracts = db.relationship('Contract', back_populates='associated_event')
+
 class Contact(db.Model):
     __tablename__ = 'contact'
     id = db.Column(db.Integer, primary_key=True)
